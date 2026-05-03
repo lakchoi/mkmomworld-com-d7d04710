@@ -41,7 +41,12 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
   try {
-    const res = await fetch(FEED_URL);
+    const res = await fetch(FEED_URL, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; mkmomworld-bot/1.0)',
+        'Accept': 'application/atom+xml, application/xml, text/xml',
+      },
+    });
     if (!res.ok) throw new Error(`Feed fetch failed: ${res.status}`);
     const xml = await res.text();
     const videos = parseFeed(xml).slice(0, 12);
