@@ -4,17 +4,6 @@ import { Play, Youtube } from "lucide-react";
 
 const CHANNEL_URL = "https://www.youtube.com/@%EC%86%A1%EC%9A%B0%EC%84%A0-e4m";
 
-const formatDate = (iso: string) => {
-  if (!iso) return "";
-  const d = new Date(iso);
-  const diffDays = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24));
-  if (diffDays < 1) return "오늘";
-  if (diffDays < 7) return `${diffDays}일 전`;
-  if (diffDays < 30) return `${Math.floor(diffDays / 7)}주 전`;
-  if (diffDays < 365) return `${Math.floor(diffDays / 30)}개월 전`;
-  return `${Math.floor(diffDays / 365)}년 전`;
-};
-
 const YoutubeSection = () => {
   const { data, isLoading, isError } = useYoutubeVideos();
   const videos = data?.videos ?? [];

@@ -6,11 +6,11 @@ export interface YoutubeVideo {
   title: string;
   url: string;
   thumbnail: string;
-  publishedAt: string;
+  views?: string;
 }
 
 interface FeedResponse {
-  channelId: string;
+  channelHandle: string;
   videos: YoutubeVideo[];
 }
 
