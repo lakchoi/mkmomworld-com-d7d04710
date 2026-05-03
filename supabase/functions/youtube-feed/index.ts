@@ -41,19 +41,21 @@ function findShorts(node: unknown, out: Video[]): void {
       const videoId = reel?.videoId as string | undefined;
       const accessibilityText = lockup.accessibilityText as string | undefined;
       if (videoId) {
-        // accessibilityText format (en): "TITLE, N views - play Short"
-        // accessibilityText format (ko): "TITLE, 조회수 N회 - Shorts 동영상 재생"
-        let title = accessibilityText ?? '';
+        // accessibilityText format examples:
+        //   en: "TITLE, N views - play Short"
+        //   ko: "TITLE, 조회수 N회 - Shorts 동영상 재생"
+        let title = (accessibilityText ?? '').trim();
         let views: string | undefined;
-        const viewMatch = title.match(/^(.*),\s*(조회수\s*[\d,.\s가-힣KMB]+회|[\d,KMB.\s]+views)\s*[-–]\s*(?:play Short|Shorts\s*동영상\s*재생)\s*$/);
-        if (viewMatch) {
-          title = viewMatch[1].trim();
-          views = viewMatch[2].replace(/^조회수\s*/, '').trim();
-        } else {
-          title = title
-            .replace(/\s*[-–]\s*(?:play Short|Shorts\s*동영상\s*재생)\s*$/, '')
-            .replace(/,\s*(?:조회수\s*[\d,.\s가-힣KMB]+회|[\d,KMB.\s]+views)\s*$/, '')
-            .trim();
+        // Strip the trailing " - play Short" / " - Shorts 동영상 재생"
+        title = title.replace(/\s*[-–]\s*(?:play Short|Shorts\s*동영상\s*재생)\s*$/u, '').trim();
+        // Now strip the trailing ", N views" / ", 조회수 N회"
+        const lastComma = title.lastIndexOf(',');
+        if (lastComma > 0) {
+          const tail = title.slice(lastComma + 1).trim();
+          if (/^(?:조회수\s+[\d.,]+\s*[가-힣]?회|[\d.,KMB\s]+views)$/u.test(tail)) {
+            views = tail.replace(/^조회수\s+/, '');
+            title = title.slice(0, lastComma).trim();
+          }
         }
         if (!out.find((v) => v.id === videoId)) {
           out.push({
