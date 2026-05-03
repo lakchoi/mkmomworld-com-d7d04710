@@ -113,33 +113,52 @@ const YoutubeSection = () => {
       </div>
 
       <Dialog open={!!activeVideo} onOpenChange={(open) => !open && setActiveVideo(null)}>
-        <DialogContent className="max-w-sm md:max-w-md p-0 overflow-hidden bg-black border-none">
+        <DialogContent
+          className="max-w-sm md:max-w-md p-0 overflow-hidden bg-black border-none"
+          aria-describedby={undefined}
+        >
           <DialogTitle className="sr-only">{activeVideo?.title ?? "YouTube 영상"}</DialogTitle>
           {activeVideo && (
             <div className="flex flex-col">
               <div className="relative w-full aspect-[9/16] bg-black">
                 <iframe
                   key={activeVideo.id}
-                  src={`https://www.youtube.com/embed/${activeVideo.id}?autoplay=1&rel=0&playsinline=1`}
+                  src={`https://www.youtube-nocookie.com/embed/${activeVideo.id}?autoplay=1&rel=0&playsinline=1&modestbranding=1`}
                   title={activeVideo.title}
                   className="absolute inset-0 w-full h-full"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
+                <div className="absolute inset-0 flex items-end justify-center p-6 pointer-events-none">
+                  <a
+                    href={activeVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="pointer-events-auto inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/90 hover:bg-primary text-primary-foreground text-xs font-medium shadow-lg backdrop-blur opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                    YouTube에서 열기
+                  </a>
+                </div>
               </div>
               <div className="p-4 bg-card">
-                <p className="text-foreground text-sm font-medium line-clamp-2 mb-3">
+                <p className="text-foreground text-sm font-medium line-clamp-2 mb-2">
                   {activeVideo.title}
                 </p>
-                <a
-                  href={activeVideo.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
-                  YouTube에서 보기 (재생되지 않을 경우)
-                </a>
+                <p className="text-xs text-muted-foreground">
+                  영상이 검은 화면이거나 재생되지 않으면{" "}
+                  <a
+                    href={activeVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline inline-flex items-center gap-1"
+                  >
+                    YouTube에서 보기
+                    <ExternalLink className="w-3 h-3" aria-hidden="true" />
+                  </a>
+                  를 이용해주세요.
+                </p>
               </div>
             </div>
           )}
