@@ -41,15 +41,19 @@ function findShorts(node: unknown, out: Video[]): void {
       const videoId = reel?.videoId as string | undefined;
       const accessibilityText = lockup.accessibilityText as string | undefined;
       if (videoId) {
-        // accessibilityText format: "TITLE, N views - play Short"
+        // accessibilityText format (en): "TITLE, N views - play Short"
+        // accessibilityText format (ko): "TITLE, 조회수 N회 - Shorts 동영상 재생"
         let title = accessibilityText ?? '';
         let views: string | undefined;
-        const viewMatch = title.match(/^(.*?),\s*([\d,KMB.\s]+(?:views|회))\s*-\s*play Short/);
+        const viewMatch = title.match(/^(.*),\s*(조회수\s*[\d,.\s가-힣KMB]+회|[\d,KMB.\s]+views)\s*[-–]\s*(?:play Short|Shorts\s*동영상\s*재생)\s*$/);
         if (viewMatch) {
           title = viewMatch[1].trim();
-          views = viewMatch[2].trim();
+          views = viewMatch[2].replace(/^조회수\s*/, '').trim();
         } else {
-          title = title.replace(/\s*-\s*play Short\s*$/, '').trim();
+          title = title
+            .replace(/\s*[-–]\s*(?:play Short|Shorts\s*동영상\s*재생)\s*$/, '')
+            .replace(/,\s*(?:조회수\s*[\d,.\s가-힣KMB]+회|[\d,KMB.\s]+views)\s*$/, '')
+            .trim();
         }
         if (!out.find((v) => v.id === videoId)) {
           out.push({
