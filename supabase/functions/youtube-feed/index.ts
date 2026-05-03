@@ -1,39 +1,69 @@
-// YouTube channel feed proxy (RSS) — no API key required
+// YouTube channel scraper — extracts shorts/videos from public channel pages.
+// No API key required. Falls back gracefully if YouTube changes its markup.
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const CHANNEL_ID = 'UCsd52y0hqyS__r87paYfnwg'; // @송우선-e4m
-const FEED_URL = `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`;
+const CHANNEL_HANDLE = '@%EC%86%A1%EC%9A%B0%EC%84%A0-e4m'; // @송우선-e4m
+const SHORTS_URL = `https://www.youtube.com/${CHANNEL_HANDLE}/shorts`;
 
 interface Video {
   id: string;
   title: string;
   url: string;
   thumbnail: string;
-  publishedAt: string;
+  views?: string;
 }
 
-function parseFeed(xml: string): Video[] {
-  const videos: Video[] = [];
-  const entryRegex = /<entry>([\s\S]*?)<\/entry>/g;
-  let m: RegExpExecArray | null;
-  while ((m = entryRegex.exec(xml)) !== null) {
-    const entry = m[1];
-    const id = entry.match(/<yt:videoId>([^<]+)<\/yt:videoId>/)?.[1];
-    const title = entry.match(/<title>([^<]+)<\/title>/)?.[1];
-    const published = entry.match(/<published>([^<]+)<\/published>/)?.[1];
-    if (!id || !title) continue;
-    videos.push({
-      id,
-      title,
-      url: `https://www.youtube.com/watch?v=${id}`,
-      thumbnail: `https://i.ytimg.com/vi/${id}/hqdefault.jpg`,
-      publishedAt: published ?? '',
-    });
+function extractInitialData(html: string): unknown | null {
+  const m = html.match(/var ytInitialData\s*=\s*({[\s\S]*?});\s*<\/script>/);
+  if (!m) return null;
+  try {
+    return JSON.parse(m[1]);
+  } catch {
+    return null;
   }
-  return videos;
+}
+
+function findShorts(node: unknown, out: Video[]): void {
+  if (out.length >= 15) return;
+  if (Array.isArray(node)) {
+    for (const v of node) findShorts(v, out);
+    return;
+  }
+  if (node && typeof node === 'object') {
+    const obj = node as Record<string, unknown>;
+    const lockup = obj.shortsLockupViewModel as Record<string, unknown> | undefined;
+    if (lockup) {
+      const onTap = (lockup.onTap as Record<string, unknown>)?.innertubeCommand as Record<string, unknown> | undefined;
+      const reel = onTap?.reelWatchEndpoint as Record<string, unknown> | undefined;
+      const videoId = reel?.videoId as string | undefined;
+      const accessibilityText = lockup.accessibilityText as string | undefined;
+      if (videoId) {
+        // accessibilityText format: "TITLE, N views - play Short"
+        let title = accessibilityText ?? '';
+        let views: string | undefined;
+        const viewMatch = title.match(/^(.*?),\s*([\d,KMB.\s]+(?:views|회))\s*-\s*play Short/);
+        if (viewMatch) {
+          title = viewMatch[1].trim();
+          views = viewMatch[2].trim();
+        } else {
+          title = title.replace(/\s*-\s*play Short\s*$/, '').trim();
+        }
+        if (!out.find((v) => v.id === videoId)) {
+          out.push({
+            id: videoId,
+            title,
+            url: `https://www.youtube.com/shorts/${videoId}`,
+            thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+            views,
+          });
+        }
+      }
+    }
+    for (const v of Object.values(obj)) findShorts(v, out);
+  }
 }
 
 Deno.serve(async (req) => {
@@ -41,17 +71,22 @@ Deno.serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
   try {
-    const res = await fetch(FEED_URL, {
+    const res = await fetch(SHORTS_URL, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; mkmomworld-bot/1.0)',
-        'Accept': 'application/atom+xml, application/xml, text/xml',
+        'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en;q=0.8',
       },
     });
-    if (!res.ok) throw new Error(`Feed fetch failed: ${res.status}`);
-    const xml = await res.text();
-    const videos = parseFeed(xml).slice(0, 12);
+    if (!res.ok) throw new Error(`Channel page fetch failed: ${res.status}`);
+    const html = await res.text();
+    const data = extractInitialData(html);
+    if (!data) throw new Error('ytInitialData not found');
+    const videos: Video[] = [];
+    findShorts(data, videos);
+
     return new Response(
-      JSON.stringify({ channelId: CHANNEL_ID, videos }),
+      JSON.stringify({ channelHandle: '송우선-e4m', videos: videos.slice(0, 12) }),
       {
         headers: {
           ...corsHeaders,
