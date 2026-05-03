@@ -104,6 +104,17 @@ const YoutubeSection = () => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="송우선 유튜브 채널 바로가기"
+              onClick={(e) => {
+                const opened = window.open(CHANNEL_URL, "_blank", "noopener,noreferrer");
+                if (!opened) {
+                  e.preventDefault();
+                  if (window.top) {
+                    window.top.location.href = CHANNEL_URL;
+                  } else {
+                    window.location.href = CHANNEL_URL;
+                  }
+                }
+              }}
             >
               <Youtube className="w-5 h-5 mr-2" aria-hidden="true" />
               유튜브 채널 바로가기
