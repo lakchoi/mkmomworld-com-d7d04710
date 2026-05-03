@@ -5,8 +5,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-const CHANNEL_HANDLE = '@%EC%86%A1%EC%9A%B0%EC%84%A0-e4m'; // @송우선-e4m
-const SHORTS_URL = `https://www.youtube.com/${CHANNEL_HANDLE}/shorts`;
+const CHANNEL_ID = 'UCsd52y0hqyS__r87paYfnwg'; // @송우선-e4m
+const SHORTS_URL = `https://www.youtube.com/channel/${CHANNEL_ID}/shorts`;
 
 interface Video {
   id: string;
