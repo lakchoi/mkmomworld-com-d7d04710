@@ -75,9 +75,9 @@ const YoutubeSection = () => {
                     <p className="text-white text-xs md:text-sm font-medium line-clamp-2 mb-1">
                       {v.title}
                     </p>
-                    <p className="text-white/70 text-xs">
-                      {formatDate(v.publishedAt)}
-                    </p>
+                    {v.views && (
+                      <p className="text-white/70 text-xs">조회수 {v.views}</p>
+                    )}
                   </div>
                 </div>
               </a>
