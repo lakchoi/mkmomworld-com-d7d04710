@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { useYoutubeVideos } from "@/hooks/useYoutubeVideos";
 import { Button } from "@/components/ui/button";
-import { Play, Youtube } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Play, Youtube, ExternalLink } from "lucide-react";
 
 const CHANNEL_URL = "https://www.youtube.com/@%EC%86%A1%EC%9A%B0%EC%84%A0-e4m";
 
 const YoutubeSection = () => {
   const { data, isLoading, isError } = useYoutubeVideos();
   const videos = data?.videos ?? [];
+  const [activeVideo, setActiveVideo] = useState<{ id: string; title: string; url: string } | null>(null);
 
   return (
     <section
@@ -47,13 +50,12 @@ const YoutubeSection = () => {
         {!isLoading && videos.length > 0 && (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {videos.slice(0, 5).map((v) => (
-              <a
+              <button
                 key={v.id}
-                href={v.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block"
-                aria-label={`유튜브 영상 보기: ${v.title}`}
+                type="button"
+                onClick={() => setActiveVideo({ id: v.id, title: v.title, url: v.url })}
+                className="group block text-left"
+                aria-label={`유튜브 영상 재생: ${v.title}`}
               >
                 <div className="relative aspect-[9/16] rounded-3xl overflow-hidden shadow-2xl bg-muted">
                   <img
@@ -63,7 +65,7 @@ const YoutubeSection = () => {
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-80" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute inset-0 flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                     <div className="w-14 h-14 rounded-full bg-primary/90 flex items-center justify-center shadow-lg">
                       <Play
                         className="w-6 h-6 text-primary-foreground fill-primary-foreground ml-1"
@@ -80,7 +82,7 @@ const YoutubeSection = () => {
                     )}
                   </div>
                 </div>
-              </a>
+              </button>
             ))}
           </div>
         )}
@@ -109,6 +111,40 @@ const YoutubeSection = () => {
           </Button>
         </div>
       </div>
+
+      <Dialog open={!!activeVideo} onOpenChange={(open) => !open && setActiveVideo(null)}>
+        <DialogContent className="max-w-sm md:max-w-md p-0 overflow-hidden bg-black border-none">
+          <DialogTitle className="sr-only">{activeVideo?.title ?? "YouTube 영상"}</DialogTitle>
+          {activeVideo && (
+            <div className="flex flex-col">
+              <div className="relative w-full aspect-[9/16] bg-black">
+                <iframe
+                  key={activeVideo.id}
+                  src={`https://www.youtube.com/embed/${activeVideo.id}?autoplay=1&rel=0&playsinline=1`}
+                  title={activeVideo.title}
+                  className="absolute inset-0 w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+              <div className="p-4 bg-card">
+                <p className="text-foreground text-sm font-medium line-clamp-2 mb-3">
+                  {activeVideo.title}
+                </p>
+                <a
+                  href={activeVideo.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
+                  YouTube에서 보기 (재생되지 않을 경우)
+                </a>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
