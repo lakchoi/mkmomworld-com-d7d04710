@@ -48,7 +48,7 @@ const FAQSection = () => {
               <h2 className="text-4xl md:text-5xl font-black text-foreground">자주 묻는 질문</h2>
             </motion.div>
 
-            <div className="max-w-3xl space-y-3">
+            <div className="space-y-3">
               {faqs.map((faq, index) => (
                 <motion.div
                   key={index}
@@ -92,7 +92,7 @@ const FAQSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="hidden lg:flex justify-center lg:sticky lg:top-24"
+            className="hidden lg:flex justify-center items-center"
           >
             <img
               src={logo}
