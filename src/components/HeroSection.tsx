@@ -38,7 +38,7 @@ const HeroSection = () => {
             transition={{ delay: 0.4, duration: 0.7 }}
             className="text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-foreground mb-6"
           >
-            2000년대 감성,{" "}
+            2000년대 감성,<br />
             <span className="text-primary">함께하는 세상</span>
           </motion.h1>
           <motion.p
