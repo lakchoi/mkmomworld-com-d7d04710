@@ -36,8 +36,8 @@ const FAQSection = () => {
   return (
     <section id="faq" className="py-24 bg-card">
       <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-start">
-          <div>
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_auto] gap-12 items-center max-w-6xl mx-auto">
+          <div className="w-full">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -48,7 +48,7 @@ const FAQSection = () => {
               <h2 className="text-4xl md:text-5xl font-black text-foreground">자주 묻는 질문</h2>
             </motion.div>
 
-            <div className="max-w-3xl space-y-3">
+            <div className="space-y-3">
               {faqs.map((faq, index) => (
                 <motion.div
                   key={index}
@@ -92,7 +92,7 @@ const FAQSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="hidden lg:flex justify-center lg:sticky lg:top-24"
+            className="hidden lg:flex justify-center items-center"
           >
             <img
               src={logo}
