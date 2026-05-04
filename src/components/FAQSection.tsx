@@ -101,7 +101,7 @@ const FAQSection = () => {
                 className="max-w-full max-h-full object-contain"
               />
             </div>
-            <span className="text-foreground font-bold tracking-[0.3em] text-sm">LOGO</span>
+            <span className="text-foreground font-bold tracking-[0.3em] text-sm">엠케이맘월드로고</span>
           </motion.div>
         </div>
       </div>
