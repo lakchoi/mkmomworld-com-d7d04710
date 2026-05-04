@@ -94,7 +94,7 @@ const FAQSection = () => {
             transition={{ duration: 0.5 }}
             className="flex flex-col justify-center items-center self-center gap-4 bg-background border border-border rounded-3xl shadow-2xl p-6 lg:p-8 mx-auto"
           >
-            <div className="w-64 h-64 flex items-center justify-center">
+            <div className="w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 flex items-center justify-center">
               <img
                 src={logo}
                 alt="MK MOMWORLD 로고"
