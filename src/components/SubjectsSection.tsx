@@ -17,7 +17,8 @@ const fallbackImages: Record<string, string> = {
   "먹거리 안전": campaignFood,
   "환경보호": campaignEnvironment,
   "안전한 먹거리": campaignEconomy,
-  "병원동행서비스": campaignEconomy,
+  "경제생활안정": campaignEconomy,
+  "병원동행서비스": campaignHospital,
 };
 
 const SubjectsSection = () => {
