@@ -17,7 +17,7 @@ const fallbackImages: Record<string, string> = {
   "먹거리": campaignFood,
   "환경": campaignEnvironment,
   "안전한 먹거리": campaignEconomy,
-  "병원동행": campaignHospital,
+  "경제생활안정": campaignHospital,
 };
 
 const SubjectsSection = () => {
