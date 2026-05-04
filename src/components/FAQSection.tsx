@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
+import logo from "@/assets/mk-momworld-logo.png";
 
 const faqs = [
   {
@@ -35,52 +36,70 @@ const FAQSection = () => {
   return (
     <section id="faq" className="py-24 bg-card">
       <div className="container mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="mb-12"
-        >
-          <p className="text-primary font-bold text-sm tracking-widest mb-3">[ 궁금한 내용 ]</p>
-          <h2 className="text-4xl md:text-5xl font-black text-foreground">자주 묻는 질문</h2>
-        </motion.div>
-
-        <div className="max-w-3xl space-y-3">
-          {faqs.map((faq, index) => (
+        <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-start">
+          <div>
             <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.05 }}
-              className="border border-border rounded-xl overflow-hidden"
+              className="mb-12"
             >
-              <button
-                onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-secondary/50 transition-colors"
-              >
-                <span className="font-bold text-foreground text-base">{faq.q}</span>
-                <ChevronDown
-                  className={`w-5 h-5 text-primary shrink-0 transition-transform duration-300 ${
-                    openIndex === index ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-              <AnimatePresence>
-                {openIndex === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="overflow-hidden"
-                  >
-                    <p className="px-6 pb-5 text-muted-foreground leading-relaxed">{faq.a}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              <p className="text-primary font-bold text-sm tracking-widest mb-3">[ 궁금한 내용 ]</p>
+              <h2 className="text-4xl md:text-5xl font-black text-foreground">자주 묻는 질문</h2>
             </motion.div>
-          ))}
+
+            <div className="max-w-3xl space-y-3">
+              {faqs.map((faq, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  className="border border-border rounded-xl overflow-hidden"
+                >
+                  <button
+                    onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                    className="w-full flex items-center justify-between px-6 py-5 text-left hover:bg-secondary/50 transition-colors"
+                  >
+                    <span className="font-bold text-foreground text-base">{faq.q}</span>
+                    <ChevronDown
+                      className={`w-5 h-5 text-primary shrink-0 transition-transform duration-300 ${
+                        openIndex === index ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                  <AnimatePresence>
+                    {openIndex === index && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="overflow-hidden"
+                      >
+                        <p className="px-6 pb-5 text-muted-foreground leading-relaxed">{faq.a}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="hidden lg:flex justify-center lg:sticky lg:top-24"
+          >
+            <img
+              src={logo}
+              alt="MK MOMWORLD 로고"
+              className="w-64 h-64 rounded-3xl object-cover shadow-2xl"
+            />
+          </motion.div>
         </div>
       </div>
     </section>
