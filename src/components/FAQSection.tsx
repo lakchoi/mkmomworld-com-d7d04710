@@ -92,13 +92,16 @@ const FAQSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="hidden lg:flex justify-center items-center"
+            className="hidden lg:flex flex-col justify-center items-center self-center gap-4 bg-background border border-border rounded-3xl shadow-2xl p-8"
           >
-            <img
-              src={logo}
-              alt="MK MOMWORLD 로고"
-              className="w-64 h-64 rounded-3xl object-cover shadow-2xl"
-            />
+            <div className="w-64 h-64 flex items-center justify-center">
+              <img
+                src={logo}
+                alt="MK MOMWORLD 로고"
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <span className="text-foreground font-bold tracking-[0.3em] text-sm">LOGO</span>
           </motion.div>
         </div>
       </div>
