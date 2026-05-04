@@ -92,7 +92,7 @@ const FAQSection = () => {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="hidden lg:flex flex-col justify-center items-center self-center gap-4 bg-background border border-border rounded-3xl shadow-2xl p-8"
+            className="flex flex-col justify-center items-center self-center gap-4 bg-background border border-border rounded-3xl shadow-2xl p-6 lg:p-8 mx-auto"
           >
             <div className="w-64 h-64 flex items-center justify-center">
               <img
