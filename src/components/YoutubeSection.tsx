@@ -29,7 +29,7 @@ const YoutubeSection = () => {
             id="youtube-heading"
             className="text-3xl md:text-5xl font-bold text-foreground mb-4"
           >
-            영상으로 만나는 송우선
+            영상으로 만나는 맘월드
           </h2>
           <p className="text-muted-foreground text-base md:text-lg max-w-2xl mx-auto">
             엄마들을 위한 따뜻한 메시지와 인사이트를 영상으로 확인해보세요
