@@ -36,8 +36,8 @@ const FAQSection = () => {
   return (
     <section id="faq" className="py-24 bg-card">
       <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-[1fr_auto] gap-10 items-start">
-          <div>
+        <div className="grid lg:grid-cols-[minmax(0,1fr)_auto] gap-12 items-center max-w-6xl mx-auto">
+          <div className="w-full">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
