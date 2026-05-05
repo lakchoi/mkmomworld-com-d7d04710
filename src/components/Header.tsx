@@ -27,7 +27,7 @@ const Header = () => {
       className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-md border-b"
     >
       <div className="container mx-auto px-6 h-16 flex items-center justify-between">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate("/")}>
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
           <img src={logo} alt="MK MOMWORLD 로고" className="w-9 h-9 rounded-full object-cover" />
           <span className="text-lg font-bold text-foreground tracking-wide">MK MOMWORLD</span>
         </div>
